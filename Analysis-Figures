@@ -19,7 +19,6 @@ with open("urlheatmap.py", "w") as f:
 from urlheatmap import correlation_heatmap
 
 
-
 # Wrangling
 datadir = Path().cwd()/"datadir"
 
@@ -39,9 +38,10 @@ information = information[["country_name","country_text_id","v2smgovdom","v2smpa
 for col in ["v2smfordom","v2smgovdom","v2smpardom", "v2smforads"]:
     information[col] = information[col].astype(np.float64)
     
-   
- # Table 1
+    
+# Table 1
 information.describe()
+
 
 # Table 2
 vaccine["Total_Hesitant"].describe()
@@ -60,28 +60,13 @@ form_3 = "Total_Hesitant ~ v2smfordom + v2smgovdom + v2smpardom + v2smforads"
 fit_3 = smf.ols(formula = form_3, data = merged).fit()
 
 stargazer = Stargazer([fit_1,fit_2,fit_3])
-HTML(stargazer.render_html())# Table 3
-merged=pd.merge(vaccine[["Code","Entity","Total_Hesitant"]], information, how='left', left_on=["Code"],right_on=["country_text_id"])
-merged.drop(["country_name","country_text_id"],axis=1,inplace=True)
-    
-form_1 = "Total_Hesitant ~ v2smfordom"
-fit_1 = smf.ols(formula = form_1, data = merged).fit()
-
-form_2 = "Total_Hesitant ~ v2smfordom + v2smpardom"
-fit_2 = smf.ols(formula = form_2, data = merged).fit()
-
-form_3 = "Total_Hesitant ~ v2smfordom + v2smgovdom + v2smpardom + v2smforads"
-fit_3 = smf.ols(formula = form_3, data = merged).fit()
-
-stargazer = Stargazer([fit_1,fit_2,fit_3])
 HTML(stargazer.render_html())
-
 
 # Table 6 (Appendix C)
 table_6= vaccine.drop(columns=["Code"]).rename(columns={"Entity":"Country","people_vaccinated_per_hundred":"People vaccinated (%)","willingness_covid_vaccinate_this_week_pct_pop":"Willing (%)",
                                                            "uncertain_covid_vaccinate_this_week_pct_pop":"Uncertain (%)","unwillingness_covid_vaccinate_this_week_pct_pop":"Unwilling (%)","Total_Hesitant":"Total Hesitant (%)"})
                                                           
-
+                                                          
 # Figure 1
 col_names = merged.columns.to_list()
 numeric_cols = col_names[2:] 
@@ -111,8 +96,6 @@ plt.xlabel('Foreign Ads')
 plt.subplots_adjust(top=0.8, bottom=0.08, left=0.0, right=1.0, hspace=0.5, wspace=0.5)
 plt.title("Figure 2: Total Hesitancy vs. Trust in the Information by Different Institutions",loc='right')
 plt.show()
-
-
 
 # Figure 3
 def make_fittedvalues_resid_plot(fit):
