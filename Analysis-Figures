@@ -21,9 +21,9 @@ from urlheatmap import correlation_heatmap
 
 
 # Wrangling
-datadir = Path().cwd().parent/"Stats"
+datadir = Path().cwd()/"datadir"
 
-vaccine = pd.read_csv(datadir/ "covid-vaccine.csv")
+vaccine = pd.read_csv(datadir/"covid-vaccine.csv")
 vaccine = vaccine.groupby("Code").last()
 vaccine.reset_index(inplace=True)
 vaccine["Total_Hesitant"] = vaccine["uncertain_covid_vaccinate_this_week_pct_pop"] + vaccine["unwillingness_covid_vaccinate_this_week_pct_pop"]
@@ -39,6 +39,7 @@ information = information[["country_name","country_text_id","v2smgovdom","v2smpa
 for col in ["v2smfordom","v2smgovdom","v2smpardom", "v2smforads"]:
     information[col] = information[col].astype(np.float64)
     
+   
  # Table 1
 information.describe()
 
